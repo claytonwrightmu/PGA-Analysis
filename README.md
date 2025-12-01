@@ -16,6 +16,5 @@ I’m analyzing PGA Tour data to understand:
 ## Goals
 - Build a reusable dataset of player and course stats
 - Create models to predict performance on specific courses
-- Simulate different Ryder Cup roster scenarios
 - Model “what if” outcomes under ball rollback rules
 - Learn
