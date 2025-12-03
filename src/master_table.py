@@ -29,14 +29,17 @@ def _normalize_stat_col(col: str) -> str:
     return col
 
 
-def build_master_player_table(save: bool = True,
-                              filename: str = "master_player_stats.csv") -> pd.DataFrame:
+def build_master_player_table(
+    save: bool = True,
+    filename: str = "master_player_stats.csv",
+) -> pd.DataFrame:
     """
     Merge all leaderboards in Data/Players/raw into a single player-level table.
 
-    - Uses player_id + player as join keys.
-    - Keeps all stat columns, but prefixes them with the leaderboard key.
-      Example: 'sg_off_the_tee__avg', 'gir_150_175_percentage__pct', etc.
+    - Uses player_id + player as join keys when available.
+    - Keeps ALL players across all files (outer joins).
+    - Prefixes stat columns with the leaderboard key.
+    - Fills missing numeric values so stars (Scottie, etc.) are not dropped.
 
     Returns:
         pandas.DataFrame with one row per player and many stat columns.
@@ -49,35 +52,47 @@ def build_master_player_table(save: bool = True,
     master: pd.DataFrame | None = None
 
     for key, df in leaderboards.items():
-        # Ensure we have the ID + name columns
-        if not all(c in df.columns for c in base_cols):
-            # If a file doesn't have player_id/player for some reason, skip it
-            continue
-
         temp = df.copy()
 
-        # Figure out which columns are actual stats
+        # If player_id is missing in a file, fall back to just 'player'
+        join_cols = [c for c in base_cols if c in temp.columns]
+        if "player" not in join_cols:
+            # Can't join without player name; skip this file
+            continue
+
+        # figure out which columns are actual stats
         stat_cols = [c for c in temp.columns if c not in ignore_cols]
         if not stat_cols:
             continue
 
-        # Rename stat columns with a prefix based on the file key
+        # rename stat columns with prefix based on file key
         rename_map = {}
         for col in stat_cols:
             norm_col = _normalize_stat_col(col)
             new_name = f"{key}__{norm_col}"
             rename_map[col] = new_name
 
-        temp = temp[base_cols + stat_cols].rename(columns=rename_map)
+        temp = temp[join_cols + stat_cols].rename(columns=rename_map)
 
         if master is None:
             master = temp
         else:
-            master = pd.merge(master, temp, on=base_cols, how="outer")
+            master = pd.merge(master, temp, on=join_cols, how="outer")
 
     if master is None or master.empty:
         raise ValueError("No leaderboards were merged. Check that files loaded correctly.")
 
+    # ------------- OPTION B: KEEP EVERYONE, FILL MISSING VALUES -------------
+
+    # fill numeric columns with their column mean
+    numeric_cols = master.select_dtypes(include=["float", "int"]).columns
+    if len(numeric_cols) > 0:
+        master[numeric_cols] = master[numeric_cols].fillna(master[numeric_cols].mean())
+
+    # any leftover NaNs (strings, odd stuff) -> 0
+    master = master.fillna(0)
+
+    # save to processed CSV if requested
     if save:
         PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
         out_path = PROCESSED_DIR / filename
