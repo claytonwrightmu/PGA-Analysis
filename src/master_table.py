@@ -100,3 +100,12 @@ def build_master_player_table(
         print(f"Saved master table to {out_path}")
 
     return master
+def build_master_table(
+    save: bool = True,
+    filename: str = "master_player_stats.csv",
+) -> pd.DataFrame:
+    """
+    Thin wrapper so other code can call build_master_table()
+    instead of build_master_player_table().
+    """
+    return build_master_player_table(save=save, filename=filename)
