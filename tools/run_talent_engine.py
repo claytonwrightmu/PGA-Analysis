@@ -31,7 +31,7 @@ def main():
     )
 
     # 3) sort and show top 25 in the terminal
-    top_25 = talent_df[["Player", "TalentScore", "Tier"]].head(25)
+   top_25 = talent_df[["player", "TalentScore", "Tier"]].head(25)
     print(top_25.to_string(index=False))
 
     # 4) save full table
