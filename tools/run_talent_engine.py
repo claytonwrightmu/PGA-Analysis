@@ -2,24 +2,24 @@ import os
 import sys
 import pandas as pd
 
-# --- set up imports from src/ ---
+# --- set up imports so we can use the src package ---
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
-SRC_DIR = os.path.join(ROOT_DIR, "src")
-if SRC_DIR not in sys.path:
-    sys.path.append(SRC_DIR)
 
-# ⚠️ adjust these imports to match your actual functions
-from master_table import build_master_table  # or whatever builds your main player df
-from player_talent_engine import build_talent_table  # we’ll standardize this
+# Make sure the project root is on sys.path
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
+
+from src.master_table import build_master_table
+from src.player_talent_engine import build_talent_table
 
 
 def main():
-    # 1) build the full player/master table from your pipeline
-    master_df: pd.DataFrame = build_master_table()
+    # 1) build the full master player table
+    master_df = build_master_table(save=True)
 
-    # 2) run the talent engine on that table
-    talent_df: pd.DataFrame = build_talent_table(
+    # 2) run the talent engine
+    talent_df = build_talent_table(
         master_df,
         n_tiers=5,
         labels=["S", "A", "B", "C", "D"],
@@ -30,11 +30,11 @@ def main():
         use_total=True,
     )
 
-    # 3) sort and show top 25 in the terminal
-   top_25 = talent_df[["player", "TalentScore", "Tier"]].head(25)
+    # 3) show top 25
+    top_25 = talent_df[["player", "TalentScore", "Tier"]].head(25)
     print(top_25.to_string(index=False))
 
-    # 4) save full table
+    # 4) save full talent table
     out_path = os.path.join(ROOT_DIR, "Data", "Players", "processed", "talent_table.csv")
     talent_df.to_csv(out_path, index=False)
     print(f"\nSaved full talent table to: {out_path}")
