@@ -6,6 +6,14 @@ from .player_leaderboards import load_all_leaderboards
 
 PROCESSED_DIR = Path("Data/Players/processed")
 
+# 2025 strokes-gained columns we care about
+SG_COLS_2025 = [
+    "sg_off_the_tee__avg",
+    "sg_approach_the_green__avg",
+    "sg_around_the_green__avg",
+    "sg_putting__avg",
+]
+
 
 def _normalize_stat_col(col: str) -> str:
     """
@@ -37,12 +45,10 @@ def build_master_player_table(
     Merge all leaderboards in Data/Players/raw into a single player-level table.
 
     - Uses player_id + player as join keys when available.
-    - Keeps ALL players across all files (outer joins).
+    - Keeps ALL players across all files initially (outer joins).
     - Prefixes stat columns with the leaderboard key.
-    - Fills missing numeric values so stars (Scottie, etc.) are not dropped.
-
-    Returns:
-        pandas.DataFrame with one row per player and many stat columns.
+    - THEN filters to players who have real 2025 SG stats.
+    - Fills missing numeric values with column means.
     """
     leaderboards = load_all_leaderboards()
 
@@ -82,9 +88,20 @@ def build_master_player_table(
     if master is None or master.empty:
         raise ValueError("No leaderboards were merged. Check that files loaded correctly.")
 
-    # ------------- OPTION B: KEEP EVERYONE, FILL MISSING VALUES -------------
+    # ------------- FILTER TO ACTIVE 2025 PLAYERS (BEFORE fillna) -------------
+    # We consider a player "active" if they have ANY non-zero 2025 SG component.
+    sg_cols_present = [c for c in SG_COLS_2025 if c in master.columns]
+    if sg_cols_present:
+        # Treat NaN as 0 *only for this mask*
+        sg_vals = master[sg_cols_present].fillna(0)
+        active_mask = (sg_vals.abs().sum(axis=1) > 0)
+        before = len(master)
+        master = master[active_mask].reset_index(drop=True)
+        print(f"Filtered inactive players using 2025 SG: {before} -> {len(master)}")
+    else:
+        print("WARNING: No 2025 SG columns found; skipping active-player filter.")
 
-    # fill numeric columns with their column mean
+    # ------------- NOW do numeric fill -------------
     numeric_cols = master.select_dtypes(include=["float", "int"]).columns
     if len(numeric_cols) > 0:
         master[numeric_cols] = master[numeric_cols].fillna(master[numeric_cols].mean())
@@ -100,12 +117,14 @@ def build_master_player_table(
         print(f"Saved master table to {out_path}")
 
     return master
+
+
 def build_master_table(
     save: bool = True,
     filename: str = "master_player_stats.csv",
 ) -> pd.DataFrame:
     """
-    Thin wrapper so other code can call build_master_table()
-    instead of build_master_player_table().
+    Thin wrapper so other modules can call `build_master_table`
+    without worrying about the internal function name.
     """
     return build_master_player_table(save=save, filename=filename)
