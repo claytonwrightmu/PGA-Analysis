@@ -1,7 +1,7 @@
 **Setting up a virtual world of golf to compare to live events.**
 ##
 Concept:
-Turn the PGA Tour into a video-game-style ecosystem using a mathematically grounded Overall Rating (OVR) system based on multi-year strokes-gained analytics. This becomes the backbone for rankings, simulations, course-fit models, and game-like features.
+Turn the PGA Tour into a video game dashboard using a mathematically grounded Overall Rating system based on strokes-gained analytics. This becomes the backbone for rankings, simulations, course-fit models, and game-like features.
 ##
 **Core**
 Create an NBA2K/Madden-style 0–99 Overall Rating for every golfer based on your custom TalentScore, which blends:
