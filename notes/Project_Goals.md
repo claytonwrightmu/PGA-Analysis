@@ -67,4 +67,3 @@ Stuff I’m not doing yet, but want on the radar:
 - Implement agentic AI
 - Beat the sportbooks and crumple Big Gambking with math
 
-Learn.
