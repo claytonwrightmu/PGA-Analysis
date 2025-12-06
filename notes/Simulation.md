@@ -33,7 +33,7 @@ Every course adds:
 - +APP rating for ball-striker venues
 - +ARG for tough greens
 - –OTT at positional tracks
-Then OVR adjusts accordingly (like “+3 OVR at Augusta”).
+then OVR adjusts accordingly (like “+3 OVR at Augusta”).
 
 C) Player Cards
 - Each golfer becomes a “card” with:
