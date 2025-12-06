@@ -64,5 +64,5 @@ Stuff I’m not doing yet, but want on the radar:
 - Visual dashboards for player profiles and course profiles  
 - Automated reports for big events (majors, Ryder Cup, etc.)
 - Implement agentic AI
-- Beat the sportbooks and crumple Big Gambking with math
+- Beat the sportbooks and crumple big gambling with math
 
