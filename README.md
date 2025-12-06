@@ -1,5 +1,5 @@
-PGA-Analysis
-
+**PGA-Analysis**
+##
 PGA-Analysis is my ongoing build-out of a real golf analytics engine. It’s grown into a multi-season data pipeline, a talent model, and a foundation for full tournament simulations.
 
 The project evolves every time I learn something new, which is exactly the point.
