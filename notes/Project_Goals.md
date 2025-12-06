@@ -26,7 +26,6 @@ Right now the priorities are:
 - Keep the code organized so it’s easy to add new tools later  
 - Start thinking clearly about what inputs are needed for “course DNA”
 
-If something doesn’t move one of those forward, it’s a side quest.
 
 ---
 
@@ -40,7 +39,7 @@ Short to medium term, I want to:
        - Early season tournaments may not show accurate + sustainable data
 4. Start drafting how a basic simulation engine would work (inputs → process → outputs)
 
-These don’t have to be perfect. They just need to be real.
+These don’t have to be perfect, just real.
 
 ---
 
