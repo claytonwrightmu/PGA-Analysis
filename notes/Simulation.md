@@ -21,6 +21,7 @@ Ratings
 - Everyone else scaled proportionally between them
 ##
 Gamify
+
 A) Ryder Cup Team Builder
 Use OVR + course fit + form boosts to create:
 -Simulated team chemistry
