@@ -66,5 +66,6 @@ Stuff I’m not doing yet, but want on the radar:
 - Add a system to incorporate golfers' personal lives into on course performance (Agent)
 - Grade caddies and have a way to track movement in the caddy field (Agent)
 - Identify advantageous odds in gambling books (Agent)
-- Aging curves for players across seasons  
+- Aging curves for players across seasons
+- Simulate alternate timelines for a pro's career
 
