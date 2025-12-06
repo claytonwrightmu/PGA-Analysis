@@ -21,7 +21,7 @@ Simulation-ready structure
 
 - Everything is being built with the idea that tournament simulations will eventually sit on top of it. Probabilities, cutline projections, future golf ball rollback.
 ##
-Where the project currently stands
+**Where the project currently stands**
 ##
 Right now, the pipeline can:
 
