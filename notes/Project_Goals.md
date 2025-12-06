@@ -60,9 +60,11 @@ This project should make me better at thinking, not just better at coding.
 Stuff I’m not doing yet, but want on the radar:
 
 - Archetype clusters (bombers, precision guys, short-game specialists, etc.)  
-- Aging curves for players across seasons  
 - Visual dashboards for player profiles and course profiles  
 - Automated reports for big events (majors, Ryder Cup, etc.)
 - Implement agentic AI
-- Beat the sportbooks and crumple big gambling with math
+- Add a system to incorporate golfers' personal lives into on course performance (Agent)
+- Grade caddies and have a way to track movement in the caddy field (Agent)
+- Identify advantageous odds in gambling books (Agent)
+- Aging curves for players across seasons  
 
