@@ -55,7 +55,7 @@ This project should make me better at thinking, not just better at coding.
 
 ---
 
-## 5. Future Ideas (Parking Lot)
+## 5. Future Ideas
 
 Stuff I’m not doing yet, but want on the radar:
 
