@@ -24,30 +24,26 @@ Gamify
 
 A) Ryder Cup Team Builder
 Use OVR + course fit + form boosts to create:
--Simulated team chemistry
--Matchup probabilities
--Optimal lineup strategies
+- Simulated team chemistry
+- Matchup probabilities
+- Optimal lineup strategies
 
 B) Course DNA Modifiers
 Every course adds:
-+APP rating for ball-striker venues
-+ARG for tough greens
-–OTT at positional tracks
+- +APP rating for ball-striker venues
+- +ARG for tough greens
+- –OTT at positional tracks
 Then OVR adjusts accordingly (like “+3 OVR at Augusta”).
 
 C) Player Cards
--Each golfer becomes a “card” with:
--2K OVR
--Sub-ratings (OTT, APP, ARG, PUTT)
+- Each golfer becomes a “card” with:
+- 2K OVR
+- Sub-ratings (OTT, APP, ARG, PUTT)
 
 Unique boosts (wind player, bomber, elite scrambler)
 
 D) Tournament Sim Engine
--Use the OVR + volatility (sigma) to simulate:
--Leaderboards
--Upsets
-
-Match play outcomes
-
-Season-long rankings
+- Use the OVR + volatility (sigma) to simulate:
+- Leaderboards
+- Upsets
 
