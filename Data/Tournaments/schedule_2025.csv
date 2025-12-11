@@ -1,0 +1,11 @@
+event_id,tournament_name,start_date,course_profile_key,field_size,notes
+sentry_2025,The Sentry (Kapalua),2025-01-02,wedge_birdiefest,60,Resort course; wide fairways; wedge scoring; low rough; birdiefest
+wmphoenix_2025,WM Phoenix Open (TPC Scottsdale),2025-02-06,stadium_desert_scottsdale,132,Desert golf; driver + wedges; water on key holes; rowdy environment
+riviera_2025,The Genesis Invitational (Riviera),2025-02-13,bomber_ballstriking_riviera,120,Elite ball striking test; long irons; tough fairways; firm conditions
+bayhill_2025,Arnold Palmer Invitational (Bay Hill),2025-03-06,us_open_penal,120,Penal rough; long par 4s; high wind exposure; extremely demanding tee-to-green
+players_2025,THE PLAYERS Championship (TPC Sawgrass),2025-03-13,water_target_tpc,144,Water everywhere; precise target golf; mid–long irons; volatile scoring
+masters_2025,The Masters (Augusta National),2025-04-10,augusta_masters,88,Major; elevation changes; greens complexity; strong approach + lag putting
+pga_2025,PGA Championship,2025-05-15,us_open_penal,156,Major; thick rough; long course; emphasis on OTT + APP
+usopen_2025,U.S. Open,2025-06-12,us_open_penal,156,Major; extremely penal; lowest scoring volatility; consistency required
+open_2025,The Open Championship,2025-07-17,wind_links_open,156,Major; wind; creativity; ground game; links-style trajectory control
+tourchamp_2025,Tour Championship (East Lake),2025-08-21,eastlake_ballstriking,30,Small field; heavy approach test; rewards discipline and mental toughness

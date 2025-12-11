@@ -1,0 +1,27 @@
+Genesis Invitational 2025 – Riviera Country Club
+
+Top 10 win probabilities:
+  - Scottie Scheffler: 2.18% win, 10.2% top-5, avg finish 44.2
+  - J.J. Spaun: 2.00% win, 8.3% top-5, avg finish 47.4
+  - Tommy Fleetwood: 1.92% win, 8.5% top-5, avg finish 46.6
+  - Russell Henley: 1.86% win, 7.2% top-5, avg finish 51.4
+  - Rory McIlroy: 1.86% win, 7.7% top-5, avg finish 49.2
+  - Viktor Hovland: 1.84% win, 7.8% top-5, avg finish 47.3
+  - Patrick Cantlay: 1.74% win, 7.6% top-5, avg finish 49.4
+  - Kurt Kitayama: 1.70% win, 7.2% top-5, avg finish 51.4
+  - Collin Morikawa: 1.56% win, 7.5% top-5, avg finish 49.4
+  - Keegan Bradley: 1.56% win, 6.6% top-5, avg finish 51.3
+
+Breakout candidates (overperforming raw talent ranking):
+  - Rasmus H√∏jgaard (Tier C): win rank 69, talent rank 113
+  - Erik van Rooyen (Tier C): win rank 62, talent rank 103
+  - Justin Rose (Tier C): win rank 52, talent rank 90
+  - Max Greyserman (Tier C): win rank 71, talent rank 108
+  - Ryan Fox (Tier B): win rank 23, talent rank 58
+
+Bust-risk players (strong talent but softer Riviera outlook):
+  - Lee Hodges (Tier A): talent rank 24, win rank 77
+  - Jhonattan Vegas (Tier B): talent rank 74, win rank 111
+  - Niklas Norgaard (Tier B): talent rank 84, win rank 117
+  - Mac Meissner (Tier B): talent rank 58, win rank 89
+  - Harris English (Tier B): talent rank 74, win rank 103

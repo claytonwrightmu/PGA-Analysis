@@ -1,0 +1,19 @@
+{
+  "name": "Kapalua (The Sentry)",
+  "sg_weights": {
+    "sg_ott": 1.1,
+    "sg_app": 1.0,
+    "sg_arg": 0.9,
+    "sg_putt": 1.1
+  },
+  "attr_weights": {
+    "Power": 1.2,
+    "Approach": 1.0,
+    "ShortGame": 1.0,
+    "Putting": 1.1,
+    "Consistency": 0.9,
+    "DogFactor": 0.9
+  },
+  "scale": 0.35,
+  "notes": "Wide fairways, elevation changes, wedges and putting in a birdie-fest environment."
+}
