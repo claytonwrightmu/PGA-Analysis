@@ -1,0 +1,1 @@
+from .model_config import COURSE_ARCHETYPES, CourseArchetype, MODEL_VERSION, LOG_PATH, OUTPUT_PATH, DEFAULT_DATA_PATH

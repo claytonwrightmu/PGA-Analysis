@@ -1,0 +1,19 @@
+2025-12-16 03:11:11,777 - golf_model.pipeline - INFO - Initialized Golf Model Pipeline v0.2.0
+2025-12-16 03:11:11,778 - golf_model.pipeline - INFO - Data path: /workspaces/PGA-Analysis/Data/Players/raw_stats
+2025-12-16 03:11:11,778 - golf_model.pipeline - INFO - ================================================================================
+2025-12-16 03:11:11,778 - golf_model.pipeline - INFO - STARTING COMPLETE PIPELINE
+2025-12-16 03:11:11,778 - golf_model.pipeline - INFO - ================================================================================
+2025-12-16 03:11:11,778 - golf_model.pipeline - INFO - [STEP 1] Loading player data...
+2025-12-16 03:11:11,778 - golf_model.data_loader - WARNING - Could not find file for sg_ott (2025)
+2025-12-16 03:11:11,778 - golf_model.data_loader - WARNING - Could not find file for sg_app (2025)
+2025-12-16 03:11:11,778 - golf_model.data_loader - WARNING - Could not find file for sg_arg (2025)
+2025-12-16 03:11:11,779 - golf_model.data_loader - WARNING - Could not find file for sg_putt (2025)
+2025-12-16 03:11:11,779 - golf_model.data_loader - WARNING - Could not find file for sg_t2g (2025)
+2025-12-16 03:11:11,779 - golf_model.data_loader - WARNING - Could not find file for driving_distance (2025)
+2025-12-16 03:11:11,779 - golf_model.data_loader - WARNING - Could not find file for driving_accuracy (2025)
+2025-12-16 03:11:11,779 - golf_model.data_loader - WARNING - Could not find file for gir (2025)
+2025-12-16 03:11:11,780 - golf_model.data_loader - WARNING - Could not find file for scrambling (2025)
+2025-12-16 03:11:11,780 - golf_model.data_loader - WARNING - Could not find file for sand_save (2025)
+2025-12-16 03:11:11,780 - golf_model.data_loader - WARNING - Could not find file for 3putt_avoid (2025)
+2025-12-16 03:11:11,780 - golf_model.data_loader - WARNING - Could not find file for putt_inside_10 (2025)
+2025-12-16 03:11:11,780 - golf_model.data_loader - WARNING - Could not find file for proximity (2025)

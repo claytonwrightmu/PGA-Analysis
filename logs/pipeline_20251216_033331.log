@@ -1,0 +1,13 @@
+2025-12-16 03:33:31,460 - golf_model.pipeline - INFO - Initialized Golf Model Pipeline v0.2.1
+2025-12-16 03:33:31,460 - golf_model.pipeline - INFO - Data path: /workspaces/PGA-Analysis/Data/Players/raw
+2025-12-16 03:33:31,461 - golf_model.pipeline - INFO - ================================================================================
+2025-12-16 03:33:31,461 - golf_model.pipeline - INFO - STARTING COMPLETE PIPELINE
+2025-12-16 03:33:31,461 - golf_model.pipeline - INFO - ================================================================================
+2025-12-16 03:33:31,461 - golf_model.pipeline - INFO - [STEP 1] Loading player data...
+2025-12-16 03:33:32,941 - golf_model.data_loader - INFO - Loaded 2025 data: 278 players, 13 stats
+2025-12-16 03:33:33,226 - golf_model.data_loader - INFO - Loaded 2023 data: 193 players, 4 stats
+2025-12-16 03:33:33,362 - golf_model.data_loader - INFO - Loaded 2024 data: 184 players, 4 stats
+2025-12-16 03:33:33,363 - golf_model.data_loader - INFO - Loaded 2 years: 377 player-years, 241 unique players
+2025-12-16 03:33:33,425 - golf_model.data_loader - INFO - Created master database: 278 players, 31 columns
+2025-12-16 03:33:33,429 - golf_model.pipeline - INFO - Loaded 278 players
+2025-12-16 03:33:33,429 - golf_model.pipeline - INFO - [STEP 2] Estimating player talents (Bayesian)...

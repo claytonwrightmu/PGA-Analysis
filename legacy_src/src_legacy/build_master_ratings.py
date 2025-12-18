@@ -1,200 +1,107 @@
+# src/build_master_ratings.py
+
+import pathlib
+import re
 import pandas as pd
-from pathlib import Path
 
-# =========================
-# CONFIG
-# =========================
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 
-ROOT = Path(__file__).resolve().parents[1]
-DATA_PROCESSED = ROOT / "Data" / "Players" / "processed"
+RAW_STATS_DIR = PROJECT_ROOT / "Players" / "raw_stats"
+OUT_DIR = PROJECT_ROOT / "Data" / "players"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-SOURCE_PATH = DATA_PROCESSED / "player_talent_table.csv"
-OUTPUT_PATH = DATA_PROCESSED / "master_player_ratings.csv"
+OUT_PATH = OUT_DIR / "master_player_ratings.csv"
 
 
-# =========================
-# HELPERS
-# =========================
+# ========= name cleaning (same idea as before, no name_map needed) =========
+def clean_name(x: str) -> str:
+    if x is None or (isinstance(x, float) and pd.isna(x)):
+        return ""
+    s = str(x).strip()
 
-def load_base_table() -> pd.DataFrame:
+    # remove common suffixes
+    s = re.sub(r"\b(JR|SR|II|III|IV)\b\.?$", "", s, flags=re.IGNORECASE).strip()
+
+    # "Last, First" -> "First Last"
+    if "," in s:
+        parts = [p.strip() for p in s.split(",")]
+        if len(parts) == 2 and parts[0] and parts[1]:
+            s = f"{parts[1]} {parts[0]}"
+
+    # collapse spaces
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def zscore(series: pd.Series) -> pd.Series:
+    s = pd.to_numeric(series, errors="coerce")
+    mu = s.mean()
+    sd = s.std(ddof=0)
+    if sd == 0 or pd.isna(sd):
+        return pd.Series([0.0] * len(s), index=s.index)
+    return (s - mu) / sd
+
+
+# ========= robust excel reader =========
+def read_stat_xlsx(path: pathlib.Path) -> pd.DataFrame:
     """
-    Load the core talent table and normalize column names.
-    This is the ONLY source of truth for the master ratings.
+    Reads first sheet, finds player column + numeric stat column automatically.
+    Returns: player_name, value
     """
-    df = pd.read_csv(SOURCE_PATH)
+    df = pd.read_excel(path)
 
-    # Strip whitespace / weird chars from column names
-    df.columns = df.columns.astype(str).str.strip()
+    # find player column
+    player_candidates = [c for c in df.columns if "player" in str(c).lower() or "name" in str(c).lower()]
+    player_col = player_candidates[0] if player_candidates else df.columns[0]
 
-    # Rename to standard names
-    rename_map = {
-        "player": "player_name",
-        "tss_ott": "sg_ott",
-        "tss_app": "sg_app",
-        "tss_arg": "sg_arg",
-        "tss_putt": "sg_putt",
-        "Overall2K": "OverallRating",
-        "Driving2K": "Power",
-        "Approach2K": "Approach",
-        "ShortGame2K": "ShortGame",
-        "Putting2K": "Putting",
-        "Consistency2K": "Consistency",
-        "DogFactor2K": "DogFactor",
-    }
-    df = df.rename(columns=rename_map)
+    # find numeric column (pick the last numeric-like column)
+    numeric_cols = []
+    for c in df.columns:
+        if c == player_col:
+            continue
+        s = pd.to_numeric(df[c], errors="coerce")
+        if s.notna().sum() >= max(5, int(0.3 * len(df))):
+            numeric_cols.append(c)
 
-    # Make sure we have the basic stuff we expect
-    required = [
-        "player_name", "mu", "sigma", "form",
-        "sg_ott", "sg_app", "sg_arg", "sg_putt",
-    ]
-    missing = [c for c in required if c not in df.columns]
-    if missing:
-        raise ValueError(f"Missing columns in base table: {missing}")
+    if not numeric_cols:
+        raise ValueError(f"No numeric stat column found in {path.name}. Columns={list(df.columns)}")
 
-    return df
+    value_col = numeric_cols[-1]
+
+    out = df[[player_col, value_col]].copy()
+    out.columns = ["player_name_raw", "value"]
+    out["player_name"] = out["player_name_raw"].apply(clean_name)
+    out = out.dropna(subset=["player_name"])
+    out = out[out["player_name"].astype(str).str.len() > 0]
+    return out[["player_name", "value"]]
 
 
-def get_talent_column_name(df: pd.DataFrame) -> str:
-    """
-    Robustly find the TalentScore column, even if pandas
-    has added suffixes like 'TalentScore_x'.
-    """
-    # exact match
-    if "TalentScore" in df.columns:
-        return "TalentScore"
+def build_master():
+    files = sorted(RAW_STATS_DIR.glob("*.xlsx"))
+    if not files:
+        raise FileNotFoundError(f"No .xlsx found in {RAW_STATS_DIR}")
 
-    # look for variants like TalentScore_x, TalentScore_y, etc.
-    candidates = [c for c in df.columns if c.startswith("TalentScore")]
-    if len(candidates) == 1:
-        df.rename(columns={candidates[0]: "TalentScore"}, inplace=True)
-        return "TalentScore"
-    elif len(candidates) > 1:
-        # if somehow multiple, pick the first and rename
-        chosen = candidates[0]
-        df.rename(columns={chosen: "TalentScore"}, inplace=True)
-        return "TalentScore"
+    master = None
 
-    raise ValueError(f"No TalentScore-like column found. Columns: {list(df.columns)}")
+    for f in files:
+        stat_key = f.stem
+        df = read_stat_xlsx(f)
+        df.rename(columns={"value": stat_key}, inplace=True)
+        df[stat_key + "_z"] = zscore(df[stat_key])
 
+        keep = ["player_name", stat_key, stat_key + "_z"]
+        df = df[keep]
 
-# =========================
-# TIERING
-# =========================
+        master = df if master is None else master.merge(df, on="player_name", how="outer")
 
-def assign_tiers(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Tiers based on TalentScore percentiles:
-        S: top 5%
-        A: next 15%
-        B: next 30%
-        C: next 30%
-        D: bottom 20%
-    """
-    talent_col = get_talent_column_name(df)
-    talent = df[talent_col]
+    # keep players with at least 3 z-metrics
+    z_cols = [c for c in master.columns if c.endswith("_z")]
+    master["num_metrics"] = master[z_cols].notna().sum(axis=1)
+    master = master[master["num_metrics"] >= 3].drop(columns=["num_metrics"])
 
-    q95 = talent.quantile(0.95)
-    q80 = talent.quantile(0.80)
-    q50 = talent.quantile(0.50)
-    q20 = talent.quantile(0.20)
-
-    def _tier(x: float) -> str:
-        if x >= q95:
-            return "S"
-        elif x >= q80:
-            return "A"
-        elif x >= q50:
-            return "B"
-        elif x >= q20:
-            return "C"
-        else:
-            return "D"
-
-    df["Tier"] = talent.apply(_tier)
-    return df
-
-
-# =========================
-# ROUNDING / CLEANUP
-# =========================
-
-def round_numeric(df: pd.DataFrame) -> pd.DataFrame:
-    # Core performance numbers
-    two_dp = ["mu", "sg_ott", "sg_app", "sg_arg", "sg_putt"]
-    three_dp = ["sigma", "form"]
-
-    # TalentScore might not exist when this is first called
-    if "TalentScore" in df.columns:
-        two_dp.append("TalentScore")
-
-    for col in two_dp:
-        if col in df.columns:
-            df[col] = df[col].astype(float).round(2)
-
-    for col in three_dp:
-        if col in df.columns:
-            df[col] = df[col].astype(float).round(3)
-
-    return df
-
-
-# =========================
-# MASTER PIPELINE
-# =========================
-
-def build_master_table():
-    print("Loading data...")
-
-    df = load_base_table()
-
-    # Ensure TalentScore column is present and normalized
-    talent_col = get_talent_column_name(df)
-    if talent_col != "TalentScore":
-        # get_talent_column_name already renamed it, just being explicit
-        df.rename(columns={talent_col: "TalentScore"}, inplace=True)
-
-    # Compute new tiers based on current TalentScore distribution
-    df = assign_tiers(df)
-
-    # Round decimals for cleanliness
-    df = round_numeric(df)
-
-    # Sort best to worst by TalentScore
-    df = df.sort_values("TalentScore", ascending=False)
-
-    # Reorder columns into a nice, game-ready layout
-    preferred_order = [
-        "player_name",
-        "player_id",
-        "mu",
-        "sigma",
-        "form",
-        "sg_ott",
-        "sg_app",
-        "sg_arg",
-        "sg_putt",
-        "TalentScore",
-        "Tier",
-        "OverallRating",
-        "Power",
-        "Approach",
-        "ShortGame",
-        "Putting",
-        "Consistency",
-        "DogFactor",
-    ]
-    cols = [c for c in preferred_order if c in df.columns]
-    # add any extra columns at the end
-    extras = [c for c in df.columns if c not in cols]
-    df = df[cols + extras]
-
-    DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
-    df.to_csv(OUTPUT_PATH, index=False)
-
-    print(f"Saved master ratings → {OUTPUT_PATH}")
-    print(df.head(10))
+    master.to_csv(OUT_PATH, index=False)
+    print(f"[OK] wrote {OUT_PATH} | players={len(master)} | cols={len(master.columns)}")
 
 
 if __name__ == "__main__":
-    build_master_table()
+    build_master()
