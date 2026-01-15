@@ -6,7 +6,7 @@ The project evolves every time I learn something new, which is exactly the point
 
 What I’m trying to create
 - A system that actually understands golf, not just spreadsheets.
-- True talent, not hot streaks
+- True talent, not hot streaks.
 - A multi-year skill model that blends strokes-gained data from different seasons to show who’s consistently elite and who just pops for a few months.
 
 Course DNA
